@@ -29,7 +29,7 @@ MXMXAXMASX`.trim().split("\n");
         }
     }
 
-    part1 = words.filter(word => (word.join("") === "XMAS" || word.join("") === "SAMX")).length;
+    part1 = words.map(word => word.join("")).filter(word => word === "XMAS" || word === "SAMX").length;
 
     for(let i = 0; i < data.length; i++) {
         for(let j = 0; j < data[i].length; j++) {
