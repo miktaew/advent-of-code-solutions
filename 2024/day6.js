@@ -25,6 +25,7 @@ const day6 = () => {
     let pos;
     let vect = [];
     let visited = {};
+    let path = [];
 
     const directions = {
         ">": [0,1],
@@ -50,12 +51,18 @@ const day6 = () => {
     starting_pos.push(...pos);
     starting_vect.push(...vect);
 
-    while(pos[0] > 0 && pos[0] < size[0] && pos[1] > 0 && pos[1] < size[1]) {
-        visited[pos] = true;
+    while(pos[0] > 0 && pos[0] < size[0] && pos[1] > 0 && pos[1] < size[1]) {  
+        if(!visited[pos]) {
+            visited[pos] = vect;
+        }
+
         const next_pos = [pos[0]+vect[0], pos[1]+vect[1]];
         if(data[next_pos[0]]?.[next_pos[1]] === "#") {
+            path[[...pos,...rotations[vect]]] = [...pos,...vect];
             vect = rotations[vect];
             continue;
+        } else {
+            path[[...next_pos,...vect]] = [...pos,...vect];
         }
 
         pos = [pos[0]+vect[0], pos[1]+vect[1]];
@@ -65,9 +72,16 @@ const day6 = () => {
 
     Object.keys(visited).forEach(coords => {
         coords = coords.split(",");
-        if(coords[0] == starting_pos[0] && coords[1] == starting_pos[1]) return;
-        pos = [...starting_pos];
-        vect = [...starting_vect];
+        if(coords[0] == starting_pos[0] && coords[1] == starting_pos[1]) {
+            return;
+        }
+
+        const tpos = [...coords];
+        const tvect = [...visited[coords]];
+        pos = [path[[...tpos,...tvect]][0], path[[...tpos,...tvect]][1]];
+        vect = [path[[...tpos,...tvect]][2], path[[...tpos,...tvect]][3]];
+        //starts one step before reaching the new obstacle
+
         const visited_2 = {};
         while(pos[0] > 0 && pos[0] < size[0] && pos[1] > 0 && pos[1] < size[1]) {
             if(visited_2[[pos[0],pos[1],vect[0],vect[1]]]) {
