@@ -23,7 +23,7 @@ const calibrate = (target, arr, already_done = {}, concat) => {
         return true;
     }
 
-    if(calibrate(target / last, remaining_arr, already_done, concat)) {
+    if(target % last == 0 && calibrate(target / last, remaining_arr, already_done, concat)) {
         already_done[key] = true;
         return true;
     }
