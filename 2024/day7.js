@@ -1,42 +1,30 @@
 const fs = require("fs");
 
-const calibrate = (target, arr, already_done = {}, concat) => {
-    const key = target + ":" + arr.join(",");
-    if(key in already_done) {
-        return already_done[key];
-    }
-
-    if(target == 0) {
-        return true;
-    }
+const calibrate = (target, arr, concat) => {
 
     if(arr.length == 0) {
-        return false;
+        return target == 0;
     }
 
     const last = arr[arr.length - 1];
 
     const remaining_arr = [...arr.slice(0,-1)];
 
-    if(calibrate(target - last, remaining_arr, already_done, concat)) {
-        already_done[key] = true;
+    if(calibrate(target - last, remaining_arr, concat)) {
         return true;
     }
 
-    if(target % last == 0 && calibrate(target / last, remaining_arr, already_done, concat)) {
-        already_done[key] = true;
+    if(target % last == 0 && calibrate(target / last, remaining_arr, concat)) {
         return true;
     }
 
     if(concat) {
         const size = Math.floor(Math.log10(last))+1;
-        if(target % 10**size == last && calibrate(Math.floor(target/10**size), remaining_arr, already_done, concat)) {
-            already_done[key] = true;
+        if(target % 10**size == last && calibrate(Math.floor(target/10**size), remaining_arr, concat)) {
             return true;
         }
     }
 
-    already_done[key] = false;
     return false;
 }
 
@@ -55,16 +43,16 @@ const day7 = () => {
 
     let part1 = 0;
     let part2 = 0;
-    
+    const start = performance.now();
     for(let i = 0; i < data.length; i++) {
         if(calibrate(Number(data[i][0]), data[i][1])) {
             part1 += Number(data[i][0]);
         }
-        if(calibrate(Number(data[i][0]), data[i][1], {}, true)) {
+        if(calibrate(Number(data[i][0]), data[i][1], true)) {
             part2 += Number(data[i][0]);
         }
     }
-
+    console.log(`${performance.now() - start} ms`);
     return {part1, part2};
 }
 
