@@ -4,5 +4,6 @@ const day3 = require("./day3.js");
 const day4 = require("./day4.js");
 const day5 = require("./day5.js");
 const day6 = require("./day6.js");
+const day7 = require("./day7.js");
 
-console.log(day6());
+console.log(day7());
