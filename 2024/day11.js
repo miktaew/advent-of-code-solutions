@@ -6,24 +6,27 @@ const blink = (stones, blink_count) => {
         Object.keys(stones).forEach(stone_number => {
             if(stone_number == 0) {
                 new_stones[1] = stones[stone_number];
-            } else if(stone_number.length%2 == 0) {
-                const num_a = stone_number.slice(0, stone_number.length/2);
-                const num_b = `${+stone_number.slice(stone_number.length/2)}`;
-
-                new_stones[num_a] = stones[stone_number] + (new_stones[num_a] || 0);
-                new_stones[num_b] = stones[stone_number] + (new_stones[num_b] || 0);
             } else {
-                new_stones[stone_number*2024] = stones[stone_number] + (new_stones[stone_number*2024] || 0);
+                const number_length = Math.floor(Math.log10(stone_number))+1;
+                if(number_length%2 == 0) {
+                    const num_a = Math.floor(stone_number/10**(number_length/2));
+                    const num_b = stone_number % 10**(number_length/2);
+
+                    new_stones[num_a] = stones[stone_number] + (new_stones[num_a] || 0);
+                    new_stones[num_b] = stones[stone_number] + (new_stones[num_b] || 0);
+
+                } else {
+                    new_stones[stone_number*2024] = stones[stone_number] + (new_stones[stone_number*2024] || 0);
+                }
             }
         });
         stones = new_stones;
     }
-
     return stones;
 }
 
 const day11 = () => {
-    const data = fs.readFileSync("day11.txt", "utf8").trim().split(" ");
+    const data = fs.readFileSync("day11.txt", "utf8").trim().split(" ").map(x => +x);
     //const data = "125 17".split(" ");
     let part1 = 0;
     let part2 = 0;
@@ -50,3 +53,4 @@ const day11 = () => {
 }
 
 module.exports = day11;
+
